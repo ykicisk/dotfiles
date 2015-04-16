@@ -271,8 +271,6 @@ endfor
 let g:snowdrop#include_paths = {
 			\'cpp' : ['/usr/local/include']+new_path_val
 			\}
-			"\'cpp' : ['/usr/local/include','/Users/iseki/Projects/hokosen/dataset/include']
-			"\'cpp' : ['/usr/local/include']+new_path_val
 
 let g:snowdrop#command_options = {
 			\ "cpp" : "-std=c++11",
