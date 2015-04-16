@@ -8,39 +8,6 @@ export LANG=ja_JP.UTF-8  # 文字コードをUTF-8に設定
 export KCODE=u           # KCODEにUTF-8を設定
 export AUTOFEATURE=true  # autotestでfeatureを動かす
 
-# proxy設定
-export KUINS_PROXY="false"
-function enable_kuins_proxy() {
-    export HTTP_PROXY='http://proxy.kuins.net:8080'
-    export http_proxy=$HTTP_PROXY
-    export HTTPS_PROXY='http://proxy.kuins.net:8080'
-    export https_proxy=$HTTPS_PROXY
-    export FTP_PROXY='http://ftp-proxy.kuins.net:21'
-    export ftp_proxy=$FTP_PROXY
-    export ALL_PROXY=$http_proxy
-    export KUINS_PROXY="true"
-}
-function disable_kuins_proxy() {
-    unset HTTP_PROXY
-    unset http_proxy
-    unset HTTPS_PROXY
-    unset https_proxy
-    unset FTP_PROXY
-    unset ftp_proxy
-    unset ALL_PROXY
-    export KUINS_PROXY="false"
-}
-function is_kuins() { 
-if [[ `hostname` = *kuins.net* ]]; then
-    enable_kuins_proxy
-else
-    disable_kuins_proxy
-fi
-}
-#invoke is_proxy
-is_kuins
-# proxy設定ここまで
-
 bindkey -e               # キーバインドをemacsモードに設定
 #bindkey -v              # キーバインドをviモードに設定
 
