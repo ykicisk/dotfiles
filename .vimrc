@@ -96,6 +96,11 @@ else
 	nnoremap <Space>r :e ~/.vimrc<CR>
 	nnoremap <Space>s :source ~/.vimrc<CR>
 endif
+
+nnoremap <Space>c :r!<C-r>"<CR>
+inoremap <Space>c <Esc>:r!<C-r>"<CR>
+"nnoremap <Space>c :let @* = :!<C-r>"<CR>
+
 "nnoremap <Space>y :e ~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py<CR>
 
 " <TAB>: completion.                                         
