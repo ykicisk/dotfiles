@@ -92,7 +92,6 @@ if has("win32")
 	nnoremap <Space>r :e ~/_vimrc<CR>
 	nnoremap <Space>s :source ~/_vimrc<CR>
 else
-	nnoremap <Space>z :e ~/.zshrc<CR>
 	nnoremap <Space>r :e ~/.vimrc<CR>
 	nnoremap <Space>s :source ~/.vimrc<CR>
 endif
