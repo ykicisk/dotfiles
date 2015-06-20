@@ -90,15 +90,9 @@ nnoremap <Space>+ 3<C-W>+
 nnoremap <Space>- 3<C-W>-
 if has("win32")
 	nnoremap <Space>r :e ~/_vimrc<CR>
-	nnoremap <Space>s :source ~/_vimrc<CR>
 else
 	nnoremap <Space>r :e ~/.vimrc<CR>
-	nnoremap <Space>s :source ~/.vimrc<CR>
 endif
-
-nnoremap <Space>c :r!<C-r>"<CR>
-inoremap <Space>c <Esc>:r!<C-r>"<CR>
-"nnoremap <Space>c :let @* = :!<C-r>"<CR>
 
 "nnoremap <Space>y :e ~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py<CR>
 
@@ -132,44 +126,22 @@ NeoBundle 'Shougo/vimproc.vim', {
       \     'unix' : 'make -f make_unix.mak',
       \    },
       \ }
+
 NeoBundle 'Shougo/vimshell'
 
 NeoBundleLazy 'Shougo/neocomplete', {
-	\ 'autoload' : {'filetypes' : ['python','vim','zsh','xml','cpp','ruby','html','javascript']}
+	\ 'autoload' : {'filetypes' : ['python','vim','zsh','xml','cpp','ruby','html','javascript','java']}
 	\ }
-
-NeoBundleLazy 'osyo-manga/vim-snowdrop', {
-	\ 'autoload' : {'filetypes' : ['cpp']}
-			\}
-
-NeoBundleLazy 'osyo-manga/vim-marching', {
-	\ 'autoload' : {'filetypes' : ['cpp']}
-			\}
 
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'rking/ag.vim'
-"NeoBundle 'tyru/caw.vim'
-"NeoBundle 'tpope/vim-commentary'
-"NeoBundle 'osyo-manga/vim-automatic'
-"NeoBundle 'cohama/vim-smartinput'
-"NeoBundle 'cohama/vim-smartinput-endwise'
-"call smartinput_endwise#define_default_rules()
 
 NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'tyru/open-browser.vim'
 
-NeoBundle 'jceb/vim-orgmode'
-
-
-NeoBundleLazy 'vim-jp/cpp-vim', {
-	\ 'autoload' : {'filetypes':'cpp'}
-	\}
-NeoBundleLazy 'davidhalter/jedi-vim', {
-	\ 'autoload' : {'filetypes' : 'python'}
-	\ }
 NeoBundleLazy 'vim-scripts/Python-Syntax-Folding', {
 	\ 'autoload' : {'filetypes' : 'python'}
 	\ }
@@ -187,22 +159,15 @@ syntax on
 " neocomplete
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1 
-let g:neocomplete#enable_insert_char_pre = 1
-"if !exists('g:neocomplete#force_omni_input_patterns')
-"	let g:neocomplete#force_omni_input_patterns = {}
-"endif
-"let g:neocomplete#force_omni_input_patterns.cpp = 
-"	\  '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
-autocmd FileType python     setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType coffee     setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType html       setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType css        setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType xml        setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType php        setlocal omnifunc=phpcomplete#CompletePHP
-autocmd FileType php,ctp :set dictionary=~/.vim/dict/php.dict
-autocmd FileType c          setlocal omnifunc=ccomplete#Complete
-autocmd FileType ruby       setlocal omnifunc=rubycomplete#Complete
+
+let g:EclimCompletionMethod = 'omnifunc'
+
+if !exists('g:neocomplete#force_omni_input_patterns')
+	let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.java = '\%(\h\w*\|)\)\.\w*'
+let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
 
 au BufRead,BufNewFile *.md set filetype=markdown
 au BufRead,BufNewFile *.erb set filetype=html
@@ -213,7 +178,6 @@ nmap <Space>u [unite]
 nnoremap <silent> [unite]m :<C-u>Unite<Space>file_mru<CR>
 " Neosnippet
 
-"
 "Quick Run
 nnoremap [unite] <Nop>
 " Makefileがあれば :makeをするなければQuickRun 
@@ -237,21 +201,14 @@ if has("win32")
 else
 	let g:quickrun_config.cpp = {
 				\'command' : 'clang++',
-				\'cmdopt' : '-std=c++11 `pkg-config --cflags opencv` `pkg-config --libs opencv` -lshogun -lboost_system -lboost_serialization -lboost_python -lpython -lboost_thread-mt -lboost_system'
+				\'cmdopt' : '-std=c++11 -lboost_system'
 				\}
+	"'cmdopt' : '-std=c++11 `pkg-config --cflags opencv` `pkg-config --libs opencv` -lshogun -lboost_system -lboost_serialization -lboost_python -lpython -lboost_thread-mt -lboost_system'
 	let g:quickrun_config.tex = {
 				\   'command' : 'latexmk',
 				\   'exec': ['%c -gg -pdfdvi %s']
 				\}
 endif
-
-
-
-" jedi-vim
-autocmd FileType python setlocal completeopt-=preview
-let g:jedi#popup_select_first = 0
-let g:jedi#auto_vim_configuration = 0
-let g:jedi#completions_enabled=0
 
 ".vimrc.local
 set path=.,/usr/include,/usr/local/include
@@ -259,38 +216,3 @@ if filereadable('./.vimrc.local')
   source ./.vimrc.local
 endif
 
-"caw # comment
-nmap <C-k>c <Plug>(caw:I:toggle)
-vmap <C-k>c <Plug>(caw:I:toggle)
-nmap <C-k>u <Plug>(caw:I:uncomment)
-vmap <C-k>u <Plug>(caw:I:uncomment)
-
-let g:snowdrop#libclang_directory="/Library/Developer/CommandLineTools/usr/lib"
-"let g:snowdrop#libclang_directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/"
-let path_val=split(eval('&path'),',')
-let new_path_val=[]
-for p in path_val
-	call add(new_path_val,fnamemodify(p,':p'))
-endfor
-let g:snowdrop#include_paths = {
-			\'cpp' : ['/usr/local/include']+new_path_val
-			\}
-
-let g:snowdrop#command_options = {
-			\ "cpp" : "-std=c++11",
-			\}
-" Enable code completion in neocomplete.vim.
-let g:neocomplete#sources#snowdrop#enable = 1
-" Not skip
-let g:neocomplete#skip_auto_completion_time = ""
-
-"marching vim
-let g:marching_backend="snowdrop"
-let g:marching_enable_neocomplete = 1
-
-if !exists('g:neocomplete#force_omni_input_patterns')
-	let g:neocomplete#force_omni_input_patterns = {}
-endif
-
-let g:neocomplete#force_omni_input_patterns.cpp =
-			\ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
