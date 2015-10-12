@@ -1,5 +1,4 @@
-" basic setting
-"{{{
+"{{{  basic setting
 " color
 syntax on
 set background=dark
@@ -71,16 +70,20 @@ let spell_language_list = "english"
 highlight SpellErrors guifg=Red ctermbg=Red cterm=none
 let spell_auto_type = ""
 
+filetype on
+filetype plugin indent on     " required!
+filetype indent on
+syntax on
+
+"==================================================================
+au BufRead,BufNewFile *.md set filetype=markdown
+au BufRead,BufNewFile *.erb set filetype=html
+
 "==================================================================
 "}}}
-" key bind setting
-"{{{
-"comment
+"{{{  key bind setting
 "C-w
 nnoremap <Space>w <C-w><C-w>
-
-nnoremap <C-k><C-c> gc
-
 nnoremap <Space>n <C-w>n
 nnoremap <Space>b :bNext<CR>
 nnoremap <Space>t :tabNext<CR>
@@ -89,88 +92,96 @@ nnoremap <Space>< 3<C-W><
 nnoremap <Space>+ 3<C-W>+
 nnoremap <Space>- 3<C-W>-
 if has("win32")
-	nnoremap <Space>r :e ~/_vimrc<CR>
+nnoremap <Space>r :e ~/_vimrc<CR>
 else
-	nnoremap <Space>r :e ~/.vimrc<CR>
+nnoremap <Space>r :e ~/.vimrc<CR>
 endif
-
-"nnoremap <Space>y :e ~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py<CR>
 
 " <TAB>: completion.                                         
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"   
 inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>" 
 " highlight off
+
 nmap <silent> <Esc><Esc> :nohlsearch<CR>
 nnoremap j gj
 nnoremap k gk
 "}}}
-"==================================================================
-" neobundle setting
-"{{{
-set nocompatible               " be iMproved
-filetype off
+"{{{ neobundle
+if !1 | finish | endif
 if has('vim_starting')
-	set runtimepath+=~/.vim/bundle/neobundle.vim/
-	call neobundle#rc(expand('~/.vim/bundle'))
+if &compatible
+set nocompatible               " Be iMproved
 endif
-"originalrepos on github
 
+" Required:
+set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+
+" Required:
+call neobundle#begin(expand('~/.vim/bundle/'))
+
+" Let NeoBundle manage NeoBundle
+" Required:
+NeoBundleFetch 'Shougo/neobundle.vim'
+"originalrepos on github
 let g:neobundle_default_git_protocol='https'
-NeoBundle 'Shougo/neobundle.vim'
 
 NeoBundle 'Shougo/vimproc.vim', {
       \ 'build' : {
-      \     'windows' : 'tools\\update-dll-mingw',
-      \     'cygwin' : 'make -f make_cygwin.mak',
-      \     'mac' : 'make -f make_mac.mak',
-      \     'unix' : 'make -f make_unix.mak',
-      \    },
-      \ }
+            \     'windows' : 'tools\\update-dll-mingw',
+                  \     'cygwin' : 'make -f make_cygwin.mak',
+                        \     'mac' : 'make -f make_mac.mak',
+                              \     'unix' : 'make -f make_unix.mak',
+                                    \    },
+                                          \ }
 
-NeoBundle 'Shougo/vimshell'
-
-NeoBundleLazy 'Shougo/neocomplete', {
-	\ 'autoload' : {'filetypes' : ['python','vim','zsh','xml','cpp','ruby','html','javascript','java']}
-	\ }
+NeoBundle 'Shougo/neocomplete'
 
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'Shougo/unite.vim'
-NeoBundle 'rking/ag.vim'
-
 NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'tyru/open-browser.vim'
 
+NeoBundleLazy 'vim-jp/cpp-vim', {
+\ 'autoload' : {'filetypes':'cpp'}
+\}
 NeoBundleLazy 'vim-scripts/Python-Syntax-Folding', {
-	\ 'autoload' : {'filetypes' : 'python'}
-	\ }
+\ 'autoload' : {'filetypes' : 'python'}
+\ }
 NeoBundleLazy 'tomasr/molokai'
 
+" My Bundles here:
+" Refer to |:NeoBundle-examples|.
+" Note: You don't set neobundle setting in .gvimrc!
+call neobundle#end()
+
+" Required:
+filetype plugin indent on
+" If there are uninstalled bundles found on startup,
+" this will conveniently prompt you to install them.
+NeoBundleCheck
 
 "}}}
-filetype on
-filetype plugin indent on     " required!
-filetype indent on
-syntax on
-
-"==================================================================
-
+" {{{ Completion
 " neocomplete
+let g:acp_enableAtStartup = 0
 let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1 
-
-let g:EclimCompletionMethod = 'omnifunc'
-
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#sources#syntax#min_keyword_length = 2
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 if !exists('g:neocomplete#force_omni_input_patterns')
-	let g:neocomplete#force_omni_input_patterns = {}
+let g:neocomplete#force_omni_input_patterns = {}
 endif
+
+" eclim (for C++, Java, Python)
 let g:neocomplete#force_omni_input_patterns.java = '\%(\h\w*\|)\)\.\w*'
 let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
-let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
-
-au BufRead,BufNewFile *.md set filetype=markdown
-au BufRead,BufNewFile *.erb set filetype=html
+let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t].\w*'
+let g:EclimCompletionMethod = 'omnifunc'
+" }}}
+"{{{others
 
 "Unite vim 
 nnoremap [unite] <Nop>
@@ -185,34 +196,35 @@ nmap <Space><F4> :make<CR>
 nmap <Space><F5> :QuickRun<CR>
 " C++はC++11でコンパイルする
 if !exists("g:quickrun_config")
-	let g:quickrun_config = {
-				\   "_" : {
-				\       "runner" : "vimproc",
-				\       "runner/vimproc/updatetime" : 60 
-				\   },
-				\}
+let g:quickrun_config = {
+\   "_" : {
+\       "runner" : "vimproc",
+\       "runner/vimproc/updatetime" : 60 
+\   },
+\}
 endif
 
 if has("win32")
-	let g:quickrun_config.cpp = {
-				\'command' : 'g++',
-				\'cmdopt' : '-std=c++11'
-				\}
+let g:quickrun_config.cpp = {
+\'command' : 'g++',
+\'cmdopt' : '-std=c++11'
+\}
 else
-	let g:quickrun_config.cpp = {
-				\'command' : 'clang++',
-				\'cmdopt' : '-std=c++11 -lboost_system'
-				\}
-	"'cmdopt' : '-std=c++11 `pkg-config --cflags opencv` `pkg-config --libs opencv` -lshogun -lboost_system -lboost_serialization -lboost_python -lpython -lboost_thread-mt -lboost_system'
-	let g:quickrun_config.tex = {
-				\   'command' : 'latexmk',
-				\   'exec': ['%c -gg -pdfdvi %s']
-				\}
+let g:quickrun_config.cpp = {
+\'command' : 'g++',
+\'cmdopt' : '-std=c++11 -lboost_system'
+\}
+"'cmdopt' : '-std=c++11 `pkg-config --cflags opencv` `pkg-config --libs opencv` -lshogun -lboost_system -lboost_serialization -lboost_python -lpython -lboost_thread-mt -lboost_system'
+let g:quickrun_config.tex = {
+\   'command' : 'latexmk',
+\   'exec': ['%c -gg -pdfdvi %s']
+\}
 endif
 
 ".vimrc.local
 set path=.,/usr/include,/usr/local/include
 if filereadable('./.vimrc.local')
   source ./.vimrc.local
-endif
+  endif
+"}}}
 
