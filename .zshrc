@@ -143,5 +143,6 @@ case ${OSTYPE} in
 		;;
 	linux*)
 		#ここにLinux向けの設定
+		export LC_ALL="C"
 		;;
 esac
