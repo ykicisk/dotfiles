@@ -64,16 +64,10 @@ set ruler
 set showcmd
 set title
 set backspace=indent,eol,start
-" スペルチェック
-let spell_executable = "aspell"
-let spell_language_list = "english"
-highlight SpellErrors guifg=Red ctermbg=Red cterm=none
-let spell_auto_type = ""
 
 filetype on
 filetype plugin indent on     " required!
 filetype indent on
-syntax on
 
 "==================================================================
 au BufRead,BufNewFile *.md set filetype=markdown
@@ -92,10 +86,10 @@ nnoremap <Space>< 3<C-W><
 nnoremap <Space>+ 3<C-W>+
 nnoremap <Space>- 3<C-W>-
 if has("win32")
-nnoremap <Space>r :e ~/_vimrc<CR>
-else
-nnoremap <Space>r :e ~/.vimrc<CR>
-endif
+	nnoremap <Space>r :e ~/_vimrc<CR>
+    else
+    	nnoremap <Space>r :e ~/.vimrc<CR>
+        endif
 
 " <TAB>: completion.                                         
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"   
@@ -109,13 +103,13 @@ nnoremap k gk
 "{{{ neobundle
 if !1 | finish | endif
 if has('vim_starting')
-if &compatible
-set nocompatible               " Be iMproved
-endif
+	if &compatible
+    		set nocompatible               " Be iMproved
+            	endif
 
-" Required:
-set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
+	" Required:
+    	set runtimepath+=~/.vim/bundle/neobundle.vim/
+        endif
 
 " Required:
 call neobundle#begin(expand('~/.vim/bundle/'))
@@ -143,14 +137,18 @@ NeoBundle 'Shougo/unite.vim'
 NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'tyru/open-browser.vim'
-
+NeoBundle "scrooloose/syntastic"
+NeoBundle 'tell-k/vim-autopep8'
 NeoBundleLazy 'vim-jp/cpp-vim', {
-\ 'autoload' : {'filetypes':'cpp'}
-\}
-NeoBundleLazy 'vim-scripts/Python-Syntax-Folding', {
-\ 'autoload' : {'filetypes' : 'python'}
-\ }
-NeoBundleLazy 'tomasr/molokai'
+	\ 'autoload' : {'filetypes':'cpp'}
+    	\}
+        NeoBundleLazy 'vim-scripts/Python-Syntax-Folding', {
+        	\ 'autoload' : {'filetypes' : 'python'}
+            	\ }
+                NeoBundleLazy 'davidhalter/jedi-vim', {
+                	\ 'autoload' : {'filetypes' : 'python'}
+                    	\ }
+                        NeoBundleLazy 'tomasr/molokai'
 
 " My Bundles here:
 " Refer to |:NeoBundle-examples|.
@@ -172,14 +170,21 @@ let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#sources#syntax#min_keyword_length = 2
 let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 if !exists('g:neocomplete#force_omni_input_patterns')
-let g:neocomplete#force_omni_input_patterns = {}
-endif
+	let g:neocomplete#force_omni_input_patterns = {}
+    endif
 
-" eclim (for C++, Java, Python)
+" eclim (for C++, Java)
 let g:neocomplete#force_omni_input_patterns.java = '\%(\h\w*\|)\)\.\w*'
 let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
-let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t].\w*'
-let g:EclimCompletionMethod = 'omnifunc'
+" let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t].\w*'
+autocmd FileType java,cpp let g:EclimCompletionMethod = 'omnifunc'
+"
+" jedi-vim (for python)
+autocmd FileType python setlocal omnifunc=jedi#completions
+autocmd FileType python setl completeopt-=preview
+let g:jedi#completions_enabled = 0
+let g:jedi#auto_vim_configuration = 0
+let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
 " }}}
 "{{{others
 
@@ -196,35 +201,47 @@ nmap <Space><F4> :make<CR>
 nmap <Space><F5> :QuickRun<CR>
 " C++はC++11でコンパイルする
 if !exists("g:quickrun_config")
-let g:quickrun_config = {
-\   "_" : {
-\       "runner" : "vimproc",
-\       "runner/vimproc/updatetime" : 60 
-\   },
-\}
-endif
+	let g:quickrun_config = {
+    				\   "_" : {
+                    				\       "runner" : "vimproc",
+                                    				\       "runner/vimproc/updatetime" : 60 
+                                                    				\   },
+                                                                    				\}
+                                                                                    endif
 
 if has("win32")
-let g:quickrun_config.cpp = {
-\'command' : 'g++',
-\'cmdopt' : '-std=c++11'
-\}
-else
-let g:quickrun_config.cpp = {
-\'command' : 'g++',
-\'cmdopt' : '-std=c++11 -lboost_system'
-\}
-"'cmdopt' : '-std=c++11 `pkg-config --cflags opencv` `pkg-config --libs opencv` -lshogun -lboost_system -lboost_serialization -lboost_python -lpython -lboost_thread-mt -lboost_system'
-let g:quickrun_config.tex = {
-\   'command' : 'latexmk',
-\   'exec': ['%c -gg -pdfdvi %s']
-\}
-endif
+	let g:quickrun_config.cpp = {
+    				\'command' : 'g++',
+                    				\'cmdopt' : '-std=c++11'
+                                    				\}
+                                                    else
+                                                    	let g:quickrun_config.cpp = {
+                                                        				\'command' : 'g++',
+                                                                        				\'cmdopt' : '-std=c++11 -lboost_system'
+                                                                                        				\}
+                                                                                                        	"'cmdopt' : '-std=c++11 `pkg-config --cflags opencv` `pkg-config --libs opencv` -lshogun -lboost_system -lboost_serialization -lboost_python -lpython -lboost_thread-mt -lboost_system'
+                                                                                                            	let g:quickrun_config.tex = {
+                                                                                                                				\   'command' : 'latexmk',
+                                                                                                                                				\   'exec': ['%c -gg -pdfdvi %s']
+                                                                                                                                                				\}
+                                                                                                                                                                endif
 
 ".vimrc.local
 set path=.,/usr/include,/usr/local/include
 if filereadable('./.vimrc.local')
   source ./.vimrc.local
   endif
-"}}}
 
+"}}}
+" {{{ language
+" 80字超えたら警告
+autocmd FileType php,python execute "set colorcolumn=" . join(range(81, 9999), ',')
+" タブ文字規則など
+autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4 listchars=tab:>-,trail:-,extends:>,precedes:<,nbsp:%
+autocmd FileType php setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
+let g:syntastic_check_on_wq = 1
+let g:syntastic_python_checkers = ["flake8"]
+"
+" php
+let php_folding=1
+" }}}
