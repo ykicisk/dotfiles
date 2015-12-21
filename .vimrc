@@ -239,6 +239,7 @@ autocmd FileType php,python execute "set colorcolumn=" . join(range(81, 9999), '
 " タブ文字規則など
 autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4 listchars=tab:>-,trail:-,extends:>,precedes:<,nbsp:%
 autocmd FileType php setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
+autocmd FileType ruby setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
 let g:syntastic_check_on_wq = 1
 let g:syntastic_python_checkers = ["flake8"]
 "
