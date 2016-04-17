@@ -12,9 +12,15 @@ zplug "themes/steeef", from:oh-my-zsh
 if type docker-machine >/dev/null 2>&1; then
     eval $(docker-machine env default)
 	function docker_run() {
-		docker-machine ssh default -At "docker run -v \$SSH_AUTH_SOCK:/ssh-agent -v `pwd`:/home/docker/share -e SSH_AUTH_SOCK=/ssh-agent $@"
+		docker-machine ssh default -At "docker run -v \"\$SSH_AUTH_SOCK:/ssh-agent\" -v `pwd`:/home/docker/share -e SSH_AUTH_SOCK=/ssh-agent $@"
 	}
 fi
+
+# cd -> cd && ls
+cd () {
+	builtin cd "$@" && ls
+}
+
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
