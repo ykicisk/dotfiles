@@ -22,13 +22,15 @@ zplug load --verbose
 
 # cdコマンド実行後、lsを実行する
 function cd() {
-  builtin cd $@ && ls;
+  builtin cd $@ && ls --color=auto;
 }
 
 # ls時に色を付ける
 export LS_COLORS='di=36;40:ln=35;40:so=32;40:pi=33;40:ex=31;40:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;46'
 alias ls='ls --color=auto'
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
+autoload -Uz compinit
+compinit
 
 # homebrew用
 export PATH=/usr/local/bin:/usr/local/opt/coreutils/libexec/gnubin:$PATH
