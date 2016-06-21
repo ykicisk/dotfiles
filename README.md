@@ -13,5 +13,6 @@ $ curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh
 $ mkdir .vim
 $ sh ./installer.sh .vim/dein
 $ cp -r .vim/dein/repos/github.com/tomasr/molokai/colors .vim
+$ git config --global core.editor 'vim -c "set fenc=utf-8"'
 ```
 
