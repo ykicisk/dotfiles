@@ -87,9 +87,9 @@ nnoremap <Space>+ 3<C-W>+
 nnoremap <Space>- 3<C-W>-
 if has("win32")
 	nnoremap <Space>r :e ~/_vimrc<CR>
-    else
-    	nnoremap <Space>r :e ~/.vimrc<CR>
-        endif
+else
+	nnoremap <Space>r :e ~/.vimrc<CR>
+endif
 
 " <TAB>: completion.                                         
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"   
@@ -100,66 +100,48 @@ nmap <silent> <Esc><Esc> :nohlsearch<CR>
 nnoremap j gj
 nnoremap k gk
 "}}}
-"{{{ neobundle
-if !1 | finish | endif
-if has('vim_starting')
-	if &compatible
-    		set nocompatible               " Be iMproved
-            	endif
-
-	" Required:
-    	set runtimepath+=~/.vim/bundle/neobundle.vim/
-        endif
+"{{{ dein.vim
+if &compatible
+  set nocompatible               " Be iMproved
+endif
 
 " Required:
-call neobundle#begin(expand('~/.vim/bundle/'))
+set runtimepath^=~/.vim/dein/repos/github.com/Shougo/dein.vim
 
-" Let NeoBundle manage NeoBundle
 " Required:
-NeoBundleFetch 'Shougo/neobundle.vim'
-"originalrepos on github
-let g:neobundle_default_git_protocol='https'
+call dein#begin(expand('~/.vim/dein'))
 
-NeoBundle 'Shougo/vimproc.vim', {
-      \ 'build' : {
-            \     'windows' : 'tools\\update-dll-mingw',
-                  \     'cygwin' : 'make -f make_cygwin.mak',
-                        \     'mac' : 'make -f make_mac.mak',
-                              \     'unix' : 'make -f make_unix.mak',
-                                    \    },
-                                          \ }
-
-NeoBundle 'Shougo/neocomplete'
-
-NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'Shougo/neomru.vim'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'plasticboy/vim-markdown'
-NeoBundle 'kannokanno/previm'
-NeoBundle 'tyru/open-browser.vim'
-NeoBundle "scrooloose/syntastic"
-NeoBundle 'tell-k/vim-autopep8'
-NeoBundleLazy 'vim-jp/cpp-vim', {
+" Let dein manage dein
+" Required:
+call dein#add('Shougo/dein.vim')
+call dein#add('Shougo/neocomplete.vim')
+call dein#add('Shougo/vimproc', {'build': 'make'})
+call dein#add('glidenote/memolist.vim')
+call dein#add('thinca/vim-quickrun')
+call dein#add('Shougo/neomru.vim')
+call dein#add('plasticboy/vim-markdown')
+call dein#add('Konfekt/FastFold')
+call dein#add('tpope/vim-fugitive')
+call dein#add('kannokanno/previm')
+call dein#add('tyru/open-browser.vim')
+call dein#add("scrooloose/syntastic")
+call dein#add('tell-k/vim-autopep8')
+call dein#add('vim-jp/cpp-vim', {
 	\ 'autoload' : {'filetypes':'cpp'}
-    	\}
-        NeoBundleLazy 'vim-scripts/Python-Syntax-Folding', {
-        	\ 'autoload' : {'filetypes' : 'python'}
-            	\ }
-                NeoBundleLazy 'davidhalter/jedi-vim', {
-                	\ 'autoload' : {'filetypes' : 'python'}
-                    	\ }
-                        NeoBundleLazy 'tomasr/molokai'
+	\ })
+call dein#add('vim-scripts/Python-Syntax-Folding', {
+	\ 'autoload' : {'filetypes' : 'python'}
+	\ })
+call dein#add('davidhalter/jedi-vim', { 'autoload' : {'filetypes' : 'python'} })
+call dein#add('tomasr/molokai', {'lasy': 1})
 
-" My Bundles here:
-" Refer to |:NeoBundle-examples|.
-" Note: You don't set neobundle setting in .gvimrc!
-call neobundle#end()
+call dein#end()
 
-" Required:
 filetype plugin indent on
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
+
+if dein#check_install()
+    call dein#install()
+endif
 
 "}}}
 " {{{ Completion
@@ -171,7 +153,7 @@ let g:neocomplete#sources#syntax#min_keyword_length = 2
 let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 if !exists('g:neocomplete#force_omni_input_patterns')
 	let g:neocomplete#force_omni_input_patterns = {}
-    endif
+endif
 
 " eclim (for C++, Java)
 let g:neocomplete#force_omni_input_patterns.java = '\%(\h\w*\|)\)\.\w*'
@@ -202,35 +184,37 @@ nmap <Space><F5> :QuickRun<CR>
 " C++はC++11でコンパイルする
 if !exists("g:quickrun_config")
 	let g:quickrun_config = {
-    				\   "_" : {
-                    				\       "runner" : "vimproc",
-                                    				\       "runner/vimproc/updatetime" : 60 
-                                                    				\   },
-                                                                    				\}
-                                                                                    endif
+				\   "_" : {
+				\       "runner" : "vimproc",
+				\       "runner/vimproc/updatetime" : 60 
+				\   },
+				\}
+endif
 
 if has("win32")
 	let g:quickrun_config.cpp = {
-    				\'command' : 'g++',
-                    				\'cmdopt' : '-std=c++11'
-                                    				\}
-                                                    else
-                                                    	let g:quickrun_config.cpp = {
-                                                        				\'command' : 'g++',
-                                                                        				\'cmdopt' : '-std=c++11 -lboost_system'
-                                                                                        				\}
-                                                                                                        	"'cmdopt' : '-std=c++11 `pkg-config --cflags opencv` `pkg-config --libs opencv` -lshogun -lboost_system -lboost_serialization -lboost_python -lpython -lboost_thread-mt -lboost_system'
-                                                                                                            	let g:quickrun_config.tex = {
-                                                                                                                				\   'command' : 'latexmk',
-                                                                                                                                				\   'exec': ['%c -gg -pdfdvi %s']
-                                                                                                                                                				\}
-                                                                                                                                                                endif
+				\'command' : 'g++',
+				\'cmdopt' : '-std=c++11'
+				\}
+else
+	let g:quickrun_config.cpp = {
+				\'command' : 'g++',
+				\'cmdopt' : '-std=c++11 -lboost_system'
+				\}
+	"'cmdopt' : '-std=c++11 `pkg-config --cflags opencv` `pkg-config --libs opencv` -lshogun -lboost_system -lboost_serialization -lboost_python -lpython -lboost_thread-mt -lboost_system'
+	let g:quickrun_config.tex = {
+				\   'command' : 'latexmk',
+				\   'exec': ['%c -gg -pdfdvi %s']
+				\}
+endif
+
+let g:memolist_memo_suffix = "md"
 
 ".vimrc.local
 set path=.,/usr/include,/usr/local/include
 if filereadable('./.vimrc.local')
   source ./.vimrc.local
-  endif
+endif
 
 "}}}
 " {{{ language
@@ -239,7 +223,6 @@ autocmd FileType php,python execute "set colorcolumn=" . join(range(81, 9999), '
 " タブ文字規則など
 autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4 listchars=tab:>-,trail:-,extends:>,precedes:<,nbsp:%
 autocmd FileType php setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
-autocmd FileType ruby setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
 let g:syntastic_check_on_wq = 1
 let g:syntastic_python_checkers = ["flake8"]
 "
