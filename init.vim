@@ -65,8 +65,10 @@ set showcmd
 set title
 set backspace=indent,eol,start
 
+let loaded_matchparen = 1
+
 filetype on
-filetype plugin indent on     " required!
+" filetype plugin indent on     " required!
 filetype indent on
 
 "==================================================================
@@ -85,11 +87,7 @@ nnoremap <Space>> 3<C-W>>
 nnoremap <Space>< 3<C-W><
 nnoremap <Space>+ 3<C-W>+
 nnoremap <Space>- 3<C-W>-
-if has("win32")
-	nnoremap <Space>r :e ~/_vimrc<CR>
-else
-	nnoremap <Space>r :e ~/.vimrc<CR>
-endif
+nnoremap <Space>r :e ~/.config/nvim/init.vim<CR>
 
 " <TAB>: completion.                                         
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"   
@@ -106,15 +104,17 @@ if &compatible
 endif
 
 " Required:
-set runtimepath^=~/.vim/dein/repos/github.com/Shougo/dein.vim
+set runtimepath^=~/.config/nvim/dein/repos/github.com/Shougo/dein.vim
 
 " Required:
-call dein#begin(expand('~/.vim/dein'))
+call dein#begin(expand('~/.config/nvim/dein'))
 
 " Let dein manage dein
 " Required:
+call dein#add('rhysd/nyaovim-markdown-preview')
 call dein#add('Shougo/dein.vim')
-call dein#add('Shougo/neocomplete.vim')
+call dein#add('Shougo/denite.nvim')
+call dein#add('Shougo/deoplete.nvim')
 call dein#add('Shougo/vimproc', {'build': 'make'})
 call dein#add('glidenote/memolist.vim')
 call dein#add('thinca/vim-quickrun')
@@ -132,8 +132,15 @@ call dein#add('vim-jp/cpp-vim', {
 call dein#add('vim-scripts/Python-Syntax-Folding', {
 	\ 'autoload' : {'filetypes' : 'python'}
 	\ })
-call dein#add('davidhalter/jedi-vim', { 'autoload' : {'filetypes' : 'python'} })
+call dein#add('Vimjas/vim-python-pep8-indent', {
+	\ 'autoload' : {'filetypes' : 'python'}
+	\ })
+"
+" call dein#add('davidhalter/jedi-vim', { 'autoload' : {'filetypes' : 'python'} })
+call dein#add('zchee/deoplete-jedi')
 call dein#add('tomasr/molokai', {'lasy': 1})
+call dein#add('scrooloose/nerdtree')
+call dein#add('airblade/vim-gitgutter')
 
 call dein#end()
 
@@ -145,40 +152,19 @@ endif
 
 "}}}
 " {{{ Completion
-" neocomplete
-let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#sources#syntax#min_keyword_length = 2
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-if !exists('g:neocomplete#force_omni_input_patterns')
-	let g:neocomplete#force_omni_input_patterns = {}
-endif
+" deoplete
+let g:deoplete#enable_at_startup = 1
 
-" eclim (for C++, Java)
-let g:neocomplete#force_omni_input_patterns.java = '\%(\h\w*\|)\)\.\w*'
-let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
-" let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t].\w*'
-autocmd FileType java,cpp let g:EclimCompletionMethod = 'omnifunc'
-"
 " jedi-vim (for python)
-autocmd FileType python setlocal omnifunc=jedi#completions
+" autocmd FileType python setlocal omnifunc=jedi#completions
 autocmd FileType python setl completeopt-=preview
-let g:jedi#completions_enabled = 0
-let g:jedi#auto_vim_configuration = 0
-let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
+" let g:jedi#completions_enabled = 0
+" let g:jedi#auto_vim_configuration = 0
+" let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
 " }}}
 "{{{others
 
-"Unite vim 
-nnoremap [unite] <Nop>
-nmap <Space>u [unite]
-nnoremap <silent> [unite]m :<C-u>Unite<Space>file_mru<CR>
-" Neosnippet
-
 "Quick Run
-nnoremap [unite] <Nop>
-" Makefileがあれば :makeをするなければQuickRun 
 nmap <Space><F4> :make<CR>
 nmap <Space><F5> :QuickRun<CR>
 " C++はC++11でコンパイルする
@@ -216,6 +202,15 @@ if filereadable('./.vimrc.local')
   source ./.vimrc.local
 endif
 
+" nyaovim
+let g:markdown_preview_eager=1
+let g:markdown_preview_auto = 1
+
+" denite
+nmap <Space>d :Denite file_rec -highlight-mode-insert=Search<CR>
+
+nmap <Space>f :NERDTreeToggle<CR>
+
 "}}}
 " {{{ language
 " 80字超えたら警告
@@ -223,6 +218,7 @@ autocmd FileType php,python execute "set colorcolumn=" . join(range(81, 9999), '
 " タブ文字規則など
 autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4 listchars=tab:>-,trail:-,extends:>,precedes:<,nbsp:%
 autocmd FileType php setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
+autocmd FileType cpp setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
 let g:syntastic_check_on_wq = 1
 let g:syntastic_python_checkers = ["flake8"]
 "
