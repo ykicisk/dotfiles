@@ -5,6 +5,7 @@
 * coreutils (OSX)
 * tmux-2.1
 * nvim >= 0.4
+* zplug
 
 ## preparation
 

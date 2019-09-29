@@ -4,7 +4,7 @@ source ~/.zplug/zplug
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-completions"
-zplug "plugins/git", from:oh-my-zsh
+zplug "plugins/git", from:oh-my-zsh, nice:10
 zplug "themes/steeef", from:oh-my-zsh
 
 # check コマンドで未インストール項目があるかどうか verbose にチェックし
