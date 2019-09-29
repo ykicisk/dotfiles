@@ -28,12 +28,28 @@ function cd() {
 # ls時に色を付ける
 export LS_COLORS='di=36;40:ln=35;40:so=32;40:pi=33;40:ex=31;40:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;46'
 alias ls='ls --color=auto'
+alias vim='nvim'
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 autoload -Uz compinit
 compinit
 
 # homebrew用
-export PATH=/usr/local/bin:/usr/local/opt/coreutils/libexec/gnubin:$PATH
+export GOPATH=$HOME/go
+export PATH=$HOME.local/bin:$HOME/.nodebrew/current/bin:/usr/local/bin:/usr/local/opt/coreutils/libexec/gnubin:$GOPATH/bin:$PATH
+# 
+
+# export PYTHONPATH=/usr/local/lib/python2.7/site-packages:$PYTHONPATH
+# export PYTHONPATH=/usr/local/lib/python3.6/site-packages:$PYTHONPATH
+
+# # pyenv-virtualenv
+## Set path for pyenv
+export PYENV_ROOT="${HOME}/.pyenv"
+if [ -d "${PYENV_ROOT}" ]; then
+    export PATH=${PYENV_ROOT}/bin:$PATH
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+fi
+
 
 # 履歴
 HISTFILE=~/.zsh_history
@@ -47,3 +63,7 @@ setopt share_history
 setopt hist_ignore_dups
 # 重複するコマンドは古い法を削除する
 setopt hist_ignore_all_dups
+
+
+### Added by IBM Cloud CLI
+source /usr/local/Bluemix/bx/zsh_autocomplete
