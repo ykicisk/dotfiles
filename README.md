@@ -4,15 +4,32 @@
 
 * coreutils (OSX)
 * tmux-2.1
-* vim (with lua)
+* nvim >= 0.4
 
 ## preparation
 
+### Install vim-plug
+
+https://github.com/junegunn/vim-plug
+
 ```sh
-$ curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
-$ mkdir .vim
-$ sh ./installer.sh .vim/dein
-$ cp -r .vim/dein/repos/github.com/tomasr/molokai/colors .vim
-$ git config --global core.editor 'vim -c "set fenc=utf-8"'
+# in nvim
+:PlugInstall
+```
+
+### Install Coc-python
+
+https://github.com/neoclide/coc.nvim
+https://github.com/neoclide/coc-python
+
+```sh
+# in vim
+:CocInstall coc-python
+```
+
+### Copy colors directory
+
+```
+cp -r .local/share/nvim/plugged/molokai/colors .config/nvim
 ```
 
